@@ -3,6 +3,11 @@
 *General Nautilus Tutorials:*
 https://nrp.ai/documentation/userdocs/start/getting-started/
 
+*Logging In To Pod*
+```
+./bin/kubectl_login_mac.sh
+```
+
 *Downloading Files*
 ```
 ./bin/download.sh <NAUTILUS_PATH> <LOCAL_PATH>
