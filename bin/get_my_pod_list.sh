@@ -1,5 +1,6 @@
 #!/bin/bash
 
+
 PODS=$(kubectl get pods | awk 'NR>1{print $1}')
 
 for pod in $PODS; do
