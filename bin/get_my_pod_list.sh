@@ -9,5 +9,3 @@ for pod in $PODS; do
 	fi
 done
 
-# echo $(kubectl get pods | awk 'NR>1{print $1}')
-
