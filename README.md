@@ -22,3 +22,8 @@ https://nrp.ai/documentation/userdocs/start/getting-started/
 ```
 ./bin/get_my_pod_list.sh
 ```
+
+*Viewing Available Resources*
+https://nrp.ai/viz/resources/
+
+
