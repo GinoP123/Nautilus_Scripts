@@ -1,0 +1,53 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: dl
+  namespace: ecdna
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      k8s-app: ecpod
+  template:
+    metadata:
+      labels:
+        k8s-app: ecpod
+    spec:
+      affinity:
+        nodeAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            nodeSelectorTerms:
+            - matchExpressions:
+              - key: topology.kubernetes.io/region
+                operator: In
+                values:
+                - us-west
+              - key: nvidia.com/gpu.product
+                operator: In
+                values:
+                - NVIDIA-GeForce-GTX-1080-Ti
+      containers:
+      - name: ecdna
+        image: gitlab-registry.nrp-nautilus.io/prp/jupyter-stack/tensorflow:latest
+        command: ["sleep", "infinity"]
+        resources:
+          limits:
+            cpu: 3
+            nvidia.com/gpu: 4
+            memory: "60Gi"
+          requests:
+            memory: "50Gi"
+            cpu: 2
+        volumeMounts:
+        - mountPath: /home/bafnavol
+          name: bafnavol
+        securityContext:
+          runAsUser: 0
+          windowsOptions:
+            runAsUserName: "giprasad"
+      restartPolicy: Always
+      volumes:
+        - name: bafnavol
+          persistentVolumeClaim:
+            claimName: bafnavol
+            readOnly: false
