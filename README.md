@@ -12,3 +12,8 @@ https://nrp.ai/documentation/userdocs/start/getting-started/
 ```
 ./bin/upload.sh <LOCAL_PATH> <NAUTILUS_PATH>
 ```
+
+*Listing Available Pods*
+```
+./bin/get_my_pod_list.sh
+```
