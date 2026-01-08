@@ -1,8 +1,7 @@
-# Nautilus_Scripts
+# Nautilus Scripts
 
 *General Nautilus Tutorials:*
 https://nrp.ai/documentation/userdocs/start/getting-started/
-
 
 *Logging in to a Pod*
 ```
@@ -38,6 +37,7 @@ https://nrp.ai/viz/resources/
 ### Mac
 
 ```
+brew tap mklement0/ttab https://github.com/mklement0/ttab.git
 brew install mklement0/ttab/ttab
 ```
 
