@@ -4,6 +4,7 @@ import sys
 
 
 config = {
+	'namespace': 'ecdna',
 	'port': '8888',
 	'pvc_profiles': {
 		'bafnavol': '/home/bafnavol/giprasad/.profile',

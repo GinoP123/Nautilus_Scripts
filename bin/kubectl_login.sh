@@ -4,6 +4,9 @@ script_dir=$(dirname "$0")
 port=$("$script_dir/settings.py" port)
 "$script_dir/get_current_pod.sh" > /dev/null
 
+
+### Listing Pod Choices
+
 PODS=$("$script_dir/get_pod_list.sh")
 for pod in $PODS; do
 	if [[ "$pod" != "" ]]; then
@@ -12,6 +15,9 @@ for pod in $PODS; do
 	fi
 done
 echo -e "\t\t$((pod_number+1)).): Create a New Pod"
+
+
+### Selecting Pod
 
 re="^[1-$((pod_number+1))]+\$"
 echo -ne "\n\tChoice: "
@@ -32,6 +38,9 @@ else
 	POD_NAME=$(echo $PODS | cut -d" " -f"${choice}")
 fi
 
+
+### Killing Idle Port Forwarding Sessions
+
 if [[ $(ps | grep "kubectl " | grep -v "grep" | awk '{print $1}' | wc -l) -ge 1 ]]; then
 	while read -r id; do
 		echo "Killing ID: $id"
@@ -40,6 +49,9 @@ if [[ $(ps | grep "kubectl " | grep -v "grep" | awk '{print $1}' | wc -l) -ge 1 
 fi
 "$script_dir/run_command_in_new_tab.sh" "$script_dir/port_forward.sh" $POD_NAME $port
 
+
+### Waiting For Jupyter Notebook Connection
+
 wget http://localhost:$port/tree -O /dev/null > /dev/null 2> /dev/null
 while [[ $? != 0 ]]
 do
@@ -47,6 +59,9 @@ do
     wget http://localhost:$port/tree -O /dev/null > /dev/null 2> /dev/null
 done
 open http://localhost:$port/terminals/1
+
+
+### Opening Nautilus Terminal
 
 kubectl exec -it $POD_NAME -- /bin/bash
 

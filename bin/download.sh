@@ -1,6 +1,7 @@
 #!/bin/bash
 
 script_dir=$(dirname "$0")
+namespace=$("$script_dir/settings.py" namespace)
 
 download_path="$1"
 destination_path="$2"
@@ -13,7 +14,7 @@ elif [[ "$destination_path" == '' || ! -d "$destination_path" ]]; then
 fi
 
 
-regex='s|^/home/\(.*\)/.*$|\1|p'
+regex='s|^/home/\([^/]*\)/.*$|\1|p'
 pwc=$(echo $download_path | sed -n $regex)
 POD_NAME=$("$script_dir/get_current_pod.sh" "$pwc")
 if [[ $? != 0 ]]; then
@@ -22,7 +23,7 @@ if [[ $? != 0 ]]; then
 fi
 
 kubectl exec -i $POD_NAME -- /bin/bash -c "cp -r '$download_path' /home/jovyan/work"
-kubectl cp --retries=10 "ecdna/$POD_NAME:work" "$destination_path"
+kubectl cp --retries=10 "$namespace/$POD_NAME:work" "$destination_path"
 kubectl exec -i $POD_NAME -- /bin/bash -c "rm -r '/home/jovyan/work/$(basename $download_path)'"
 
 
