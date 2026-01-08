@@ -6,5 +6,6 @@ echo -e \"31\\n1\" | sudo apt-get install -y -qq wkhtmltopdf
 sudo apt-get install -qq bc
 echo y | sudo apt install -qq vim
 sudo apt-get -qq update
-echo y | sudo apt-get install -qq -y socat'
-echo y | sudo apt update && sudo apt install iproute2 net-tools lsof
+echo y | sudo apt-get install -qq -y socat
+echo y | sudo apt update
+sudo apt install -qq -y iproute2 net-tools lsof

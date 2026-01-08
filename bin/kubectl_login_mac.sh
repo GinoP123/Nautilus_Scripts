@@ -25,8 +25,8 @@ done
 
 if [[ $choice == $((pod_number+1)) ]]; then
 	"$script_dir/start_kubectl_pod.py"
-	yml_path="$script_dir/../pod_templates/gpu.yml"
-	command="import re; print(re.search('(?<=name: ).*', open($yml_path).read()).group(0))"
+	yml_path="$script_dir/../pod_templates/deployment.yml"
+	command="import yaml; print(yaml.safe_load(open('$yml_path'))['metadata']['name'])"
 	deployment_name=$(python3 -c "$command")
 	POD_NAME=$(kubectl get pods | grep "$deployment_name-" | cut -d" " -f1)
 else
