@@ -7,6 +7,7 @@ import re
 import os
 import time
 import settings
+import ast
 
 pod_name = sys.argv[1]
 port = settings.config['port']
@@ -57,13 +58,13 @@ while not valid_connection:
 ### Checking for Active Jupyter Kernels
 
 kernel_api = f'http://localhost:{port}/api/kernels'
-notebook_status = eval(requests.get(kernel_api).text)
+notebook_status = ast.literal_eval(requests.get(kernel_api).text)
 running_notebook = any(x['execution_state'] == 'busy' for x in notebook_status)
+port_forward_job.kill()
 
 if running_notebook:
     print("Active Jupyter Notebook Kernel Running")
     print("Exiting Without Deleting Pod")
-    port_forward_job.kill()
     exit(3)
 
 
@@ -76,7 +77,6 @@ running_processes = [x.strip() for x in running_processes if x.strip()]
 if running_processes:
     print("Running Processes Found")
     print("Exiting Without Deleting Pod")
-    port_forward_job.kill()
     exit(4)
 
 
@@ -90,13 +90,11 @@ tmux_sessions = [x for x in tmux_sessions if not x.startswith('jupyter_nbk')]
 if tmux_sessions:
     print("Tmux Session Found")
     print("Exiting Without Deleting Pod")
-    port_forward_job.kill()
     exit(5)
 
 
 ### Closing Pod
 
-port_forward_job.kill()
 deployment = '-'.join(pod_name.split('-')[:-2])
 print(f"Closing Inactive Kubectl Deployment {deployment}")
 sp.run(f"kubectl delete deployments {deployment}", shell=True)

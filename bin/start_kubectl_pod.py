@@ -12,6 +12,7 @@ import sys
 import settings
 import glob
 import io
+import ast
 
 
 ### Loading Settings
@@ -161,7 +162,7 @@ while not valid_connection:
 
 ### Waiting for Jupyter Connection
 
-terminals = eval(requests.get(f'http://localhost:{port}/api/terminals').text)
+terminals = ast.literal_eval(requests.get(f'http://localhost:{port}/api/terminals').text)
 if not terminals:
     get_response = requests.get(f'http://localhost:{port}')
     xsrf_value = next(iter(get_response.cookies._cookies.values()))['/']['_xsrf'].value
