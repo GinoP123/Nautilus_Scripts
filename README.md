@@ -3,14 +3,10 @@
 *General Nautilus Tutorials:*
 https://nrp.ai/documentation/userdocs/start/getting-started/
 
-*Logging In To Pod (Mac)*
-```
-./bin/kubectl_login_mac.sh
-```
 
-*Logging In To Pod (Linux)*
+*Logging In To Pod*
 ```
-./bin/kubectl_login_linux.sh
+./bin/kubectl_login.sh
 ```
 
 *Creating a New Pod*
@@ -37,3 +33,14 @@ https://nrp.ai/documentation/userdocs/start/getting-started/
 https://nrp.ai/viz/resources/
 
 
+## Required Packages
+
+### Mac
+
+```
+brew install mklement0/ttab/ttab
+```
+
+### Linux
+
+No Package Installation Needed :)

@@ -1,11 +1,10 @@
 #!/bin/bash
 
 script_dir=$(dirname "$0")
-IMPORT_JUPYTER=8888
-EXPORT_JUPYTER=8888
+port=$("$script_dir/settings.py" port)
 "$script_dir/get_current_pod.sh" > /dev/null
 
-PODS=$("$script_dir/get_my_pod_list.sh")
+PODS=$("$script_dir/get_pod_list.sh")
 for pod in $PODS; do
 	if [[ "$pod" != "" ]]; then
 		pod_number=$((pod_number + 1))
@@ -33,15 +32,21 @@ else
 	POD_NAME=$(echo $PODS | cut -d" " -f"${choice}")
 fi
 
-gnome-terminal -- bash -c "$script_dir/port_forward.sh $POD_NAME $EXPORT_JUPYTER"
+if [[ $(ps | grep "kubectl " | grep -v "grep" | awk '{print $1}' | wc -l) -ge 1 ]]; then
+	while read -r id; do
+		echo "Killing ID: $id"
+		kill "$id"
+	done < <(ps | grep "kubectl " | grep -v "grep" | awk '{print $1}')
+fi
+"$script_dir/run_command_in_new_tab.sh" "$script_dir/port_forward.sh" $POD_NAME $port
 
-wget http://localhost:$IMPORT_JUPYTER/tree -O /dev/null > /dev/null 2> /dev/null
+wget http://localhost:$port/tree -O /dev/null > /dev/null 2> /dev/null
 while [[ $? != 0 ]]
 do
     sleep 0.1
-    wget http://localhost:$IMPORT_JUPYTER/tree -O /dev/null > /dev/null 2> /dev/null
+    wget http://localhost:$port/tree -O /dev/null > /dev/null 2> /dev/null
 done
-open http://localhost:$IMPORT_JUPYTER/terminals/1
+open http://localhost:$port/terminals/1
 
 kubectl exec -it $POD_NAME -- /bin/bash
 

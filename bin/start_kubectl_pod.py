@@ -14,6 +14,13 @@ import glob
 import io
 
 
+### Loading Settings
+
+port = settings.config['port']
+pvc_list = settings.config['pvc_list']
+username = settings.config['username']
+
+
 ### Template Choice
 
 script_dir = os.path.dirname(sys.argv[0])
@@ -37,24 +44,24 @@ with open(template_path) as infile:
 
 if 'VOLUME_NAME' in new_pod:
     choices = "\n\tPermanent Storage\n"
-    for i, pvc in enumerate(settings.pvc_list, start=1):
+    for i, pvc in enumerate(pvc_list, start=1):
         choices += f"\t\t{i}.): {pvc}\n"
     print(choices)
 
     choice = '0'
-    while not (choice.isnumeric() and (0 < int(choice) <= len(settings.pvc_list))):
+    while not (choice.isnumeric() and (0 < int(choice) <= len(pvc_list))):
         choice = input("\tChoice: ")
-    pvc = settings.pvc_list[int(choice)-1]
+    pvc = pvc_list[int(choice)-1]
     new_pod = new_pod.replace('VOLUME_NAME', pvc)
 
 pvc = None
-for pvc in settings.pvc_list:
+for pvc in pvc_list:
     if pvc in new_pod:
         break
 assert pvc is not None
 
 if pvc == 'bafnavol':
-    profile = f"/home/{pvc}/{settings.username}/.profile"
+    profile = f"/home/{pvc}/{username}/.profile"
 else:
     profile = f"/home/{pvc}/.profile"
 
@@ -128,10 +135,12 @@ assert sp.run(installation_commands, shell=True).returncode == 0
 
 ### Creating a new terminal
 
-sp.run(f"{settings.terminal_open_script} kubectl exec -it {pod_name} -- /bin/bash", shell=True)
+run_cmd_in_new_tab_script = f"{script_dir}/run_command_in_new_tab.sh"
+new_login = f"'{run_cmd_in_new_tab_script}' kubectl exec -it {pod_name} -- /bin/bash"
+sp.run(new_login, shell=True)
 time.sleep(5)
 port_forward_path = f"{script_dir}/port_forward.sh"
-port_forward_job = sp.Popen(f"{port_forward_path} {pod_name} {settings.port}", shell=True, preexec_fn=os.setsid)
+port_forward_job = sp.Popen(f"{port_forward_path} {pod_name} {port}", shell=True, preexec_fn=os.setsid)
 
 
 ### Waiting for Port Forwarding Connection
@@ -140,7 +149,7 @@ valid_connection = False
 delta_t, start_time = 1, datetime.now()
 while not valid_connection:
     try:
-        requests.get(f'http://localhost:{settings.port}')
+        requests.get(f'http://localhost:{port}')
         valid_connection = True
     except requests.exceptions.ConnectionError:
         print(f'Waiting for Port Forwarding Connection, Elapsed Time: {str(datetime.now() - start_time)}')
@@ -150,11 +159,11 @@ while not valid_connection:
 
 ### Waiting for Jupyter Connection
 
-terminals = eval(requests.get(f'http://localhost:{settings.port}/api/terminals').text)
+terminals = eval(requests.get(f'http://localhost:{port}/api/terminals').text)
 if not terminals:
-    get_response = requests.get(f'http://localhost:{settings.port}')
+    get_response = requests.get(f'http://localhost:{port}')
     xsrf_value = next(iter(get_response.cookies._cookies.values()))['/']['_xsrf'].value
-    response = requests.post(f'http://localhost:{settings.port}/api/terminals', cookies=get_response.cookies, data={'_xsrf': xsrf_value})
+    response = requests.post(f'http://localhost:{port}/api/terminals', cookies=get_response.cookies, data={'_xsrf': xsrf_value})
 
 os.killpg(os.getpgid(port_forward_job.pid), signal.SIGTERM)
 
