@@ -39,15 +39,15 @@ spec:
             memory: "50Gi"
             cpu: 2
         volumeMounts:
-        - mountPath: /home/bafnavol
-          name: bafnavol
+        - mountPath: /home/VOLUME_NAME
+          name: VOLUME_NAME
         securityContext:
           runAsUser: 0
           windowsOptions:
             runAsUserName: "giprasad"
       restartPolicy: Always
       volumes:
-        - name: bafnavol
+        - name: VOLUME_NAME
           persistentVolumeClaim:
-            claimName: bafnavol
+            claimName: VOLUME_NAME
             readOnly: false

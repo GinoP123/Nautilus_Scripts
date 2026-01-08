@@ -13,6 +13,11 @@ https://nrp.ai/documentation/userdocs/start/getting-started/
 ./bin/kubectl_login_linux.sh
 ```
 
+*Creating a New Pod*
+```
+./bin/start_kubectl_pod.py
+```
+
 *Downloading Files*
 ```
 ./bin/download.sh <NAUTILUS_PATH> <LOCAL_PATH>

@@ -1,17 +1,17 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: dl
+  name: dl2
   namespace: ecdna
 spec:
   replicas: 1
   selector:
     matchLabels:
-      k8s-app: ecpod
+      k8s-app: ecpod2
   template:
     metadata:
       labels:
-        k8s-app: ecpod
+        k8s-app: ecpod2
     spec:
       affinity:
         nodeAffinity:
@@ -27,7 +27,7 @@ spec:
                 values:
                 - NVIDIA-GeForce-GTX-1080-Ti
       containers:
-      - name: ecdna
+      - name: ecdna2
         image: gitlab-registry.nrp-nautilus.io/prp/jupyter-stack/tensorflow:latest
         command: ["sleep", "infinity"]
         resources:
@@ -39,15 +39,15 @@ spec:
             memory: "50Gi"
             cpu: 2
         volumeMounts:
-        - mountPath: /home/bafnavol
-          name: bafnavol
+        - mountPath: /home/ecvol
+          name: ecvol
         securityContext:
           runAsUser: 0
           windowsOptions:
             runAsUserName: "giprasad"
       restartPolicy: Always
       volumes:
-        - name: bafnavol
+        - name: ecvol
           persistentVolumeClaim:
-            claimName: bafnavol
+            claimName: ecvol
             readOnly: false
