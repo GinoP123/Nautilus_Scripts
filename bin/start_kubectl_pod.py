@@ -24,9 +24,9 @@ while not (choice.isnumeric() and (0 < int(choice) <= len(settings.pvc_list))):
 pvc = settings.pvc_list[int(choice)-1]
 
 if pvc == 'bafnavol':
-    profile = f"/home/bafnavol/{settings.username}/.profile"
+    profile = f"/home/{pvc}/{settings.username}/.profile"
 else:
-    profile = f"/home/ecvol/.profile"
+    profile = f"/home/{pvc}/.profile"
 
 
 ### Checking if Permanent Volume Storage is already in use
