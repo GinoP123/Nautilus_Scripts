@@ -18,8 +18,8 @@ fi
 regex='s|^/home/\([^/]*\)/.*$|\1|p'
 pwc=$(echo $destination_path | sed -n $regex)
 POD_NAME=$("$script_dir/get_current_pod.sh" "$pwc")
-if [[ $? != 0 ]]; then
-	echo "ERROR: Invalid Download Path"
+if [[ $? != 0 || $pwc == "" ]]; then
+	echo "ERROR: Invalid Destination Path"
 	exit 1
 fi
 

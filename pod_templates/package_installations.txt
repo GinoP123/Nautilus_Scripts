@@ -1,11 +1,4 @@
 sudo apt-get install -qq
 sudo apt update -qq
-echo y | sudo apt install -qq tmux
 sudo apt-get update -qq --fix-missing
-echo -e \"31\\n1\" | sudo apt-get install -y -qq wkhtmltopdf
-sudo apt-get install -qq bc
-echo y | sudo apt install -qq vim
-sudo apt-get -qq update
-echo y | sudo apt-get install -qq -y socat
-echo y | sudo apt update
-sudo apt install -qq -y iproute2 net-tools lsof
+sudo apt install -qq -y lsof tmux vim

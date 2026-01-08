@@ -140,10 +140,8 @@ assert sp.run(installation_commands, shell=True).returncode == 0
 run_cmd_in_new_tab_script = f"{script_dir}/run_command_in_new_tab.sh"
 new_login = f"'{run_cmd_in_new_tab_script}' kubectl exec -it {pod_name} -- /bin/bash"
 sp.run(new_login, shell=True)
-time.sleep(5)
-port_forward_path = f"{script_dir}/port_forward.sh"
-port_forward_job = sp.Popen(f"{port_forward_path} {pod_name} {port}", 
-    shell=True, preexec_fn=os.setsid)
+port_forward_path = f"{run_cmd_in_new_tab_script} {script_dir}/port_forward.sh"
+assert sp.run(f"{port_forward_path} {pod_name} {port}", shell=True).returncode == 0
 
 
 ### Waiting for Port Forwarding Connection
@@ -169,5 +167,4 @@ if not terminals:
     response = requests.post(f'http://localhost:{port}/api/terminals', 
         cookies=get_response.cookies, data={'_xsrf': xsrf_value})
 
-os.killpg(os.getpgid(port_forward_job.pid), signal.SIGTERM)
 
