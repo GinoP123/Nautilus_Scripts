@@ -5,11 +5,12 @@ import sys
 
 config = {
 	'port': '8888',
-	'pvc_list': ['bafnavol', 'ecvol'],
-	'username': 'giprasad',
+	'pvc_profiles': {
+		'bafnavol': '/home/bafnavol/giprasad/.profile',
+		'ecvol': '/home/ecvol/.profile'
+	},
 }
 
 
 if __name__ == "__main__":
-	assert sys.argv[1] in config
 	print(config[sys.argv[1]])

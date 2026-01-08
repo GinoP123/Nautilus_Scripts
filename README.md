@@ -4,7 +4,7 @@
 https://nrp.ai/documentation/userdocs/start/getting-started/
 
 
-*Logging In To Pod*
+*Logging in to a Pod*
 ```
 ./bin/kubectl_login.sh
 ```

@@ -13,14 +13,12 @@ elif [[ $destination_path == '' ]]; then
 	exit 2
 fi
 
-bafnavol_regex='^/home/bafnavol/.*'
-ecvol_regex='^/home/ecvol/.*'
-if [[ "$destination_path" =~ $bafnavol_regex ]]; then
-	POD_NAME=$("$script_dir/get_current_pod.sh" bafnavol)
-elif [[ "$destination_path" =~ $ecvol_regex ]]; then
-	POD_NAME=$("$script_dir/get_current_pod.sh" ecvol)
-else
-	echo "ERROR: Invalid Destination Path"
+
+regex='s|^/home/\(.*\)/.*$|\1|p'
+pwc=$(echo $download_path | sed -n $regex)
+POD_NAME=$("$script_dir/get_current_pod.sh" "$pwc")
+if [[ $? != 0 ]]; then
+	echo "ERROR: Invalid Download Path"
 	exit 1
 fi
 

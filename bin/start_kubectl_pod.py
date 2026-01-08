@@ -17,8 +17,8 @@ import io
 ### Loading Settings
 
 port = settings.config['port']
-pvc_list = settings.config['pvc_list']
-username = settings.config['username']
+pvc_profiles = settings.config['pvc_profiles']
+pvc_list = list(pvc_profiles)
 
 
 ### Template Choice
@@ -53,17 +53,15 @@ if 'VOLUME_NAME' in new_pod:
         choice = input("\tChoice: ")
     pvc = pvc_list[int(choice)-1]
     new_pod = new_pod.replace('VOLUME_NAME', pvc)
-
-pvc = None
-for pvc in pvc_list:
-    if pvc in new_pod:
-        break
-assert pvc is not None
-
-if pvc == 'bafnavol':
-    profile = f"/home/{pvc}/{username}/.profile"
 else:
-    profile = f"/home/{pvc}/.profile"
+    valid_pvc = False
+    for pvc in pvc_list:
+        if pvc in new_pod:
+            valid_pvc = True
+            break
+    assert valid_pvc
+
+profile = pvc_profiles[pvc]
 
 
 ### Checking if Permanent Volume Storage is already in use
@@ -75,9 +73,11 @@ if returncode != 1:
     print("\n\n\tERROR: Pod With Same Permanent Storage Already Exists\n")
     exit(1)
 
+
 ### Creating yaml file for pod
 
-running_pods = sp.run("kubectl get pods", shell=True, capture_output=True).stdout.decode().split('\n')[1:]
+running_pods = sp.run("kubectl get pods", shell=True, 
+    capture_output=True).stdout.decode().split('\n')[1:]
 running_deployments = ['-'.join(x.split('-')[:-2]) for x in running_pods if x]
 
 pod_outpath = f"{script_dir}/../pod_templates/deployment.yml"
@@ -105,9 +105,11 @@ pod_name = ''
 while not pod_name.strip():
     time.sleep(1)
     deployment_name = yaml.safe_load(io.StringIO(new_pod))['metadata']['name']
-    pod_name = sp.run('kubectl get pods | grep "{}-" | cut -d" " -f1'.format(deployment_name), shell=True, capture_output=True).stdout.decode().strip()
+    pod_name = sp.run('kubectl get pods | grep "{}-" | cut -d" " -f1'.format(deployment_name), 
+        shell=True, capture_output=True).stdout.decode().strip()
 
-running = lambda: sp.run(f"kubectl get pods | grep {pod_name} | grep Running", capture_output=True, shell=True).stdout.decode().strip() != ''
+running = lambda: sp.run(f"kubectl get pods | grep {pod_name} | grep Running", 
+    capture_output=True, shell=True).stdout.decode().strip() != ''
 delta_t, start_time = 1, datetime.now()
 while not running():
     print(f'Waiting for Pod Startup, Elapsed Time: {str(datetime.now() - start_time)}')
@@ -140,7 +142,8 @@ new_login = f"'{run_cmd_in_new_tab_script}' kubectl exec -it {pod_name} -- /bin/
 sp.run(new_login, shell=True)
 time.sleep(5)
 port_forward_path = f"{script_dir}/port_forward.sh"
-port_forward_job = sp.Popen(f"{port_forward_path} {pod_name} {port}", shell=True, preexec_fn=os.setsid)
+port_forward_job = sp.Popen(f"{port_forward_path} {pod_name} {port}", 
+    shell=True, preexec_fn=os.setsid)
 
 
 ### Waiting for Port Forwarding Connection
@@ -163,7 +166,8 @@ terminals = eval(requests.get(f'http://localhost:{port}/api/terminals').text)
 if not terminals:
     get_response = requests.get(f'http://localhost:{port}')
     xsrf_value = next(iter(get_response.cookies._cookies.values()))['/']['_xsrf'].value
-    response = requests.post(f'http://localhost:{port}/api/terminals', cookies=get_response.cookies, data={'_xsrf': xsrf_value})
+    response = requests.post(f'http://localhost:{port}/api/terminals', 
+        cookies=get_response.cookies, data={'_xsrf': xsrf_value})
 
 os.killpg(os.getpgid(port_forward_job.pid), signal.SIGTERM)
 
