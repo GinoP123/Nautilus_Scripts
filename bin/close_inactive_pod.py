@@ -8,9 +8,13 @@ import os
 import time
 import settings
 import ast
+import datetime
+import signal
 
 pod_name = sys.argv[1]
 port = settings.config['port']
+print(datetime.datetime.now())
+
 
 ### Checking if Pod Exists
 
@@ -39,10 +43,24 @@ if active_connections.strip() != '':
     exit(2)
 
 
+### Checking Local Port Channel is Empty
+
+valid_connection = False
+try:
+    requests.get(f'http://localhost:{port}')
+    valid_connection = True
+except requests.exceptions.ConnectionError:
+    print('Waiting for Port Forwarding Connection')
+if valid_connection:
+    print(f"System Error: Localhost {port} Connection Found Prior to Port Forward Start")
+    print("Exiting Without Deleting Pod")
+    exit(3)
+
+
 ### Opening New Port Forwarding
 
 port_forward_command = f"kubectl port-forward {pod_name} {port}:{port}"
-port_forward_job = sp.Popen(port_forward_command, shell=True)
+port_forward_job = sp.Popen(port_forward_command, shell=True, preexec_fn=os.setsid)
 
 valid_connection = False
 while not valid_connection:
@@ -59,12 +77,12 @@ while not valid_connection:
 kernel_api = f'http://localhost:{port}/api/kernels'
 notebook_status = ast.literal_eval(requests.get(kernel_api).text)
 running_notebook = any(x['execution_state'] == 'busy' for x in notebook_status)
-port_forward_job.kill()
+os.killpg(os.getpgid(port_forward_job.pid), signal.SIGTERM)
 
 if running_notebook:
     print("Active Jupyter Notebook Kernel Running")
     print("Exiting Without Deleting Pod")
-    exit(3)
+    exit(4)
 
 
 ### Checking for Active Processes
@@ -76,7 +94,7 @@ running_processes = [x.strip() for x in running_processes if x.strip()]
 if running_processes:
     print("Running Processes Found")
     print("Exiting Without Deleting Pod")
-    exit(4)
+    exit(5)
 
 
 ### Checking for Active Tmux Sessions
@@ -89,7 +107,7 @@ tmux_sessions = [x for x in tmux_sessions if not x.startswith('jupyter_nbk')]
 if tmux_sessions:
     print("Tmux Session Found")
     print("Exiting Without Deleting Pod")
-    exit(5)
+    exit(6)
 
 
 ### Closing Pod
