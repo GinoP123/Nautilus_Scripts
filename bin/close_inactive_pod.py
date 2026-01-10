@@ -20,7 +20,6 @@ pod_description = sp.run(check_pod_exists,
 
 if pod_description == '' or not pod_name.strip():
     print("Error: Pod Not Found")
-    print("Exiting Without Deleting Pod")
     exit(1)
 
 
