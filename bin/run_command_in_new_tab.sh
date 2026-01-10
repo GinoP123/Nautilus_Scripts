@@ -1,8 +1,9 @@
 #!/bin/bash
 
+cmd="$@"
 if [[ $(uname -s) == 'Darwin' ]]; then
-	ttab $@
+	ttab $cmd
 else
-	gnome-terminal -- bash -c "$@"
+	gnome-terminal --tab --title="nautilus" -- /bin/bash -c "$cmd" 2> /dev/null & disown
 fi
 
