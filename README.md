@@ -31,7 +31,7 @@ https://nrp.ai/documentation/userdocs/start/getting-started/
 *Viewing Available Resources*
 https://nrp.ai/viz/resources/
 
-*Requesting A100 GPUs*
+*Reservations for Nodes*
 https://nrp.ai/reservations/
 
 ## Required Packages

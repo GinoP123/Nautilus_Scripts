@@ -13,25 +13,17 @@ spec:
       labels:
         k8s-app: ecpod_chatbot_POD_NUM
     spec:
-      affinity:
-        nodeAffinity:
-          requiredDuringSchedulingIgnoredDuringExecution:
-            nodeSelectorTerms:
-            - matchExpressions:
-              - key: nvidia.com/gpu.product
-                operator: In
-                values:
-                - NVIDIA-GeForce-GTX-1080-Ti
       containers:
       - name: ecdna
         image: gitlab-registry.nrp-nautilus.io/prp/jupyter-stack/tensorflow:latest
         command: ["sleep", "infinity"]
         resources:
           limits:
+            nvidia.com/a100: 1
             cpu: 3
-            nvidia.com/gpu: 1
             memory: "60Gi"
           requests:
+            nvidia.com/a100: 1
             memory: "50Gi"
             cpu: 2
         volumeMounts:
