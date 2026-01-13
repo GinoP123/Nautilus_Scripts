@@ -25,12 +25,14 @@ https://nrp.ai/documentation/userdocs/start/getting-started/
 
 *Listing Available Pods*
 ```
-./bin/get_my_pod_list.sh
+./bin/get_pod_list.sh
 ```
 
 *Viewing Available Resources*
 https://nrp.ai/viz/resources/
 
+*Requesting A100 GPUs*
+https://nrp.ai/reservations/
 
 ## Required Packages
 
