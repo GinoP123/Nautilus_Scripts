@@ -36,13 +36,13 @@ https://nrp.ai/reservations/
 
 ## Required Packages
 
+```
+pip install -r requirements.txt
+```
+
 ### Mac
 
 ```
 brew tap mklement0/ttab https://github.com/mklement0/ttab.git
 brew install mklement0/ttab/ttab
 ```
-
-### Linux
-
-No Package Installation Needed :)
