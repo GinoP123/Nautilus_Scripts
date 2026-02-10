@@ -18,14 +18,10 @@ spec:
           requiredDuringSchedulingIgnoredDuringExecution:
             nodeSelectorTerms:
             - matchExpressions:
-              - key: topology.kubernetes.io/region
-                operator: In
-                values:
-                - us-west
               - key: nvidia.com/gpu.product
                 operator: In
                 values:
-                - NVIDIA-GeForce-GTX-1080-Ti
+                - NVIDIA-L40
       containers:
       - name: ecdna
         image: gitlab-registry.nrp-nautilus.io/prp/jupyter-stack/tensorflow:latest
@@ -33,7 +29,7 @@ spec:
         resources:
           limits:
             cpu: 3
-            nvidia.com/gpu: 2
+            nvidia.com/gpu: 1
             memory: "60Gi"
           requests:
             memory: "50Gi"
