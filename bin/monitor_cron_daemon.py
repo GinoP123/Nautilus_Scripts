@@ -57,6 +57,7 @@ for line in output.strip().split('\n'):
     if re.match(date_format, line):
         cron_session = datetime.datetime.strptime(line, '%a %b %d %I:%M:%S %p PST %Y')
         cron_sessions.append(cron_session.date())
+cron_sessions = sorted(set(cron_sessions))
 
 
 # In[7]:
@@ -76,8 +77,9 @@ while curr_day < datetime.datetime.now().date():
     else:
         streaks.append(0)
         incomplete.append(1)
-    curr_day += datetime.timedelta(1)
     xticks.append(str(curr_day))
+    curr_day += datetime.timedelta(1)
+    
 streaks = np.array(streaks)
 incomplete = np.array(incomplete)
 
