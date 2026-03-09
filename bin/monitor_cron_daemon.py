@@ -30,37 +30,29 @@ with open(f"{script_dir}/../cron_log/cron_log.txt") as infile:
 # In[4]:
 
 
-def char_to_match(ch):
-    if ch.isnumeric():
-        return '[0-9]'
-    elif ch.isalpha() and ch == ch.upper():
-        return '[A-Z]'
-    elif ch.isalpha():
-        return '[a-z]'
-    else:
-        return ch
-char_to_match = np.vectorize(char_to_match)
+date_format = ' '.join("""
+[A-Z][a-z][a-z]
+[A-Z][a-z][a-z] 
+[0-9]+
+[0-9][0-9]:[0-9][0-9]:[0-9][0-9]
+[A-Z][A-Z]
+[A-Z][A-Z][A-Z]
+[0-9][0-9][0-9][0-9]
+""".strip().split('\n'))
 
 
 # In[5]:
 
 
-date_format = sp.run("date", shell=True, capture_output=True).stdout.decode().strip()
-date_format = ''.join(char_to_match(list(date_format)))
-
-
-# In[6]:
-
-
 cron_sessions = []
 for line in output.strip().split('\n'):
     if re.match(date_format, line):
-        cron_session = datetime.datetime.strptime(line, '%a %b %d %I:%M:%S %p PST %Y')
+        cron_session = datetime.datetime.strptime(line, '%a %b %d %I:%M:%S %p %Z %Y')
         cron_sessions.append(cron_session.date())
 cron_sessions = sorted(set(cron_sessions))
 
 
-# In[7]:
+# In[6]:
 
 
 streaks = []
@@ -84,7 +76,7 @@ streaks = np.array(streaks)
 incomplete = np.array(incomplete)
 
 
-# In[8]:
+# In[7]:
 
 
 plt.bar(np.arange(len(streaks)), streaks, color='limegreen')
