@@ -32,12 +32,12 @@ with open(f"{script_dir}/../cron_log/cron_log.txt") as infile:
 
 date_format = ' '.join("""
 [A-Z][a-z][a-z]
-[A-Z][a-z][a-z] 
-[0-9]+
-[0-9][0-9]:[0-9][0-9]:[0-9][0-9]
+[A-Z][a-z][a-z]
+[\\d\\s][\\d\\s]
+[\\d][\\d]:[\\d][\\d]:[\\d][\\d]
 [A-Z][A-Z]
 [A-Z][A-Z][A-Z]
-[0-9][0-9][0-9][0-9]
+[\\d][\\d][\\d][\\d]
 """.strip().split('\n'))
 
 
