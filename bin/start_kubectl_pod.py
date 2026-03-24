@@ -57,7 +57,7 @@ if 'VOLUME_NAME' in new_pod:
 else:
     valid_pvc = False
     for pvc in pvc_list:
-        if pvc in new_pod:
+        if f"claimName: {pvc}\n" in new_pod:
             valid_pvc = True
             break
     assert valid_pvc
@@ -66,7 +66,6 @@ profile = pvc_profiles[pvc]
 
 
 ### Checking if Permanent Volume Storage is already in use
-
 returncode = sp.run(f"{script_dir}/get_current_pod.sh '{pvc}'", 
     capture_output=True, shell=True).returncode
 
