@@ -19,11 +19,11 @@ spec:
         command: ["sleep", "infinity"]
         resources:
           limits:
-            cpu: 3
+            cpu: 33
             memory: "60Gi"
           requests:
             memory: "50Gi"
-            cpu: 2
+            cpu: 32
         volumeMounts:
         - mountPath: /home/bafnavol2
           name: bafnavol2

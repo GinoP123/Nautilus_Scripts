@@ -8,7 +8,7 @@ config = {
 	'port': '8888',
 	'pvc_profiles': {
 		'bafnavol': '/home/bafnavol/giprasad/.profile',
-		'bafnavol2': '/home/bafnavol2/giprasad/.profile',
+		'bafnavol2': '/home/bafnavol2/.profile',
 		'ecvol': '/home/ecvol/.profile'
 	},
 }
