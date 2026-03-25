@@ -19,11 +19,11 @@ spec:
         command: ["sleep", "infinity"]
         resources:
           limits:
-            cpu: 33
+            cpu: 17
             memory: "60Gi"
           requests:
             memory: "50Gi"
-            cpu: 32
+            cpu: 16
         volumeMounts:
         - mountPath: /home/bafnavol2
           name: bafnavol2
@@ -31,7 +31,6 @@ spec:
           runAsUser: 0
           windowsOptions:
             runAsUserName: "giprasad"
-      restartPolicy: Always
       volumes:
         - name: bafnavol2
           persistentVolumeClaim:

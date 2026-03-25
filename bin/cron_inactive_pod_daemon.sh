@@ -13,7 +13,6 @@ do
 	if [[ $? != 0 ]]; then
 		echo "No Pods Found"
 	fi
-
 	"$script_dir/close_inactive_pod.py" "$POD_NAME"
 done
 

@@ -10,7 +10,7 @@ PODS=$(kubectl get pods | awk 'NR>1{print $1}')
 
 for pod in $PODS; do
 	output=$(kubectl exec -i "$pod" -- /bin/bash -c "ls \$PWD/..")
-	if [[ "$pod" != "" && $output =~ "$pvc" ]]; then
+	if [[ "$pod" != "" && $output =~ $pvc([[:space:]]|$) ]]; then
 		echo "$pod"
 		exit 0
 	fi
