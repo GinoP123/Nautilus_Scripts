@@ -26,10 +26,16 @@ pvc_list = list(pvc_profiles)
 
 script_dir = os.path.dirname(sys.argv[0])
 pod_templates = glob.glob(f"{script_dir}/../pod_templates/*_template.yml")
-choices = "\n\tPod Template\n"
-for i, pod_template in enumerate(pod_templates, start=1):
-    deployment_name = os.path.basename(pod_template)[:-len('_template.yml')]
-    choices += f"\t\t{i}.): {deployment_name}\n"
+choices = []
+for pod_template in pod_templates:
+    with open(pod_template) as infile:
+        deployment_name = yaml.safe_load(infile)['metadata']['name']
+    choices.append(deployment_name.replace('_POD_NUM', ''))
+
+pod_templates, choices = map(list, zip(
+    *sorted(zip(pod_templates, choices), key=lambda x: x[1])))
+choices = [f"\t\t{i}.): {x}\n" for i, x in enumerate(choices, start=1)]
+choices = "\n\tPod Template\n" + ''.join(choices)
 print(choices)
 
 choice = '0'

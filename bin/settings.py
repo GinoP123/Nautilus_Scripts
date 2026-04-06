@@ -9,10 +9,13 @@ config = {
 	'pvc_profiles': {
 		'bafnavol': '/home/bafnavol/giprasad/.profile',
 		'bafnavol2': '/home/bafnavol2/.profile',
-		'ecvol': '/home/ecvol/.profile'
+		'genomevol': '/home/genomevol/.profile',
+		'ecvol': '/home/ecvol/.profile',
+		
 	},
 }
 
 
 if __name__ == "__main__":
 	print(config[sys.argv[1]])
+
