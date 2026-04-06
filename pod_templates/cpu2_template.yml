@@ -1,0 +1,38 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: cpu-2_POD_NUM
+  namespace: ecdna
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      k8s-app: ecpod_POD_NUM
+  template:
+    metadata:
+      labels:
+        k8s-app: ecpod_POD_NUM
+    spec:
+      containers:
+      - name: ecdna
+        image: gitlab-registry.nrp-nautilus.io/prp/jupyter-stack/tensorflow:latest
+        command: ["sleep", "infinity"]
+        resources:
+          limits:
+            cpu: 17
+            memory: "60Gi"
+          requests:
+            memory: "50Gi"
+            cpu: 16
+        volumeMounts:
+        - mountPath: /home/genomevol
+          name: genomevol
+        securityContext:
+          runAsUser: 0
+          windowsOptions:
+            runAsUserName: "giprasad"
+      volumes:
+        - name: genomevol
+          persistentVolumeClaim:
+            claimName: genomevol
+            readOnly: false

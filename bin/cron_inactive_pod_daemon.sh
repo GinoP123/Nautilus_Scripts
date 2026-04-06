@@ -1,6 +1,5 @@
 #!/bin/bash
 
-date
 script_dir=$(dirname "$0")
 pvc_profiles=$("$script_dir/settings.py" pvc_profiles)
 pvc_list=$(python3 -c "import ast; print(' '.join(ast.literal_eval(\"$pvc_profiles\")))")
@@ -15,4 +14,6 @@ do
 	fi
 	"$script_dir/close_inactive_pod.py" "$POD_NAME"
 done
+
+date
 
