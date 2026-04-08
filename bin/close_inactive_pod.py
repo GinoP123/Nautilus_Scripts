@@ -90,7 +90,9 @@ if running_notebook:
 check_processes = f"kubectl exec -i {pod_name} -- /bin/bash -c 'ps -a'"
 running_processes = sp.run(check_processes, shell=True, capture_output=True
                           ).stdout.decode().split('\n')[1:]
-running_processes = [x.strip() for x in running_processes if x.strip()]
+running_processes = [x.strip() for x in running_processes if x.strip() and \
+                    '<defunct>' not in x]
+
 if running_processes:
     print("Running Processes Found")
     print("Exiting Without Deleting Pod")
