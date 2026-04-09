@@ -1,4 +1,4 @@
 sudo apt-get install -qq
 sudo apt update -qq
 sudo apt-get update -qq --fix-missing
-sudo apt install -qq -y lsof tmux vim
+sudo apt install -qq -y lsof vim

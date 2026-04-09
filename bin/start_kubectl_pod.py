@@ -132,7 +132,7 @@ assert sp.run(command, shell=True).returncode == 0
 
 ### Installing Packages
 
-installation_commands_path = f"{script_dir}/../pod_templates/package_installations.txt"
+installation_commands_path = f"{script_dir}/../pod_templates/package_installations_round_1.txt"
 installation_commands = f'source {profile}; '
 with open(installation_commands_path) as infile:
     installation_commands += '; '.join(infile.read().strip().split('\n'))
@@ -149,6 +149,17 @@ sp.run(new_login, shell=True)
 time.sleep(5)
 port_forward_path = f"{script_dir}/port_forward.sh"
 port_forward_job = sp.Popen(f"{port_forward_path} {pod_name} {port}", shell=True, preexec_fn=os.setsid)
+
+
+### Installing Packages
+
+installation_commands_path = f"{script_dir}/../pod_templates/package_installations_round_2.txt"
+installation_commands = f'source {profile}; '
+with open(installation_commands_path) as infile:
+    installation_commands += '; '.join(infile.read().strip().split('\n'))
+
+installation_commands = f"kubectl exec -i {pod_name} -- /bin/bash -c '{installation_commands}'"
+assert sp.run(installation_commands, shell=True).returncode == 0
 
 
 ### Waiting for Port Forwarding Connection
