@@ -22,8 +22,6 @@ spec:
                 operator: In
                 values:
                 - NVIDIA-A10
-                - NVIDIA-GeForce-RTX-2080-Ti
-                - NVIDIA-A100-SXM2-16GB
       containers:
       - name: ecdna
         image: gitlab-registry.nrp-nautilus.io/prp/jupyter-stack/tensorflow:latest
