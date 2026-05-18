@@ -14,9 +14,7 @@ do
 		echo "No Pods Found"
 	fi
 
-	if [[ "$day_of_week" =~ ^(Sunday|Wednesday|Friday)$ ]]; then
-		"$script_dir/close_inactive_pod.py" "$POD_NAME"
-	fi
+	"$script_dir/close_inactive_pod.py" "$POD_NAME"
 done
 
 date
