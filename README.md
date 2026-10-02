@@ -28,6 +28,11 @@ https://nrp.ai/documentation/userdocs/start/getting-started/
 ./bin/get_pod_list.sh
 ```
 
+*Deleting Deployment*
+```
+kubectl delete deployment <DEPLOYMENT_NAME>
+```
+
 *Viewing Available Resources*
 https://nrp.ai/viz/resources/
 
