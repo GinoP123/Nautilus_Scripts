@@ -10,6 +10,7 @@ import settings
 import ast
 import datetime
 import signal
+import time
 
 pod_name = sys.argv[1]
 port = settings.config['port']
@@ -62,6 +63,7 @@ if valid_connection:
 port_forward_command = f"kubectl port-forward {pod_name} {port}:{port}"
 port_forward_job = sp.Popen(port_forward_command, shell=True, preexec_fn=os.setsid)
 
+timeout_timestamp = 30 + time.time()
 valid_connection = False
 while not valid_connection:
     try:
