@@ -65,7 +65,7 @@ port_forward_job = sp.Popen(port_forward_command, shell=True, preexec_fn=os.sets
 
 timeout_timestamp = 30 + time.time()
 valid_connection = False
-while not valid_connection:
+while not valid_connection and time.time() > timeout_timestamp:
     try:
         requests.get(f'http://localhost:{port}')
         valid_connection = True
@@ -73,18 +73,17 @@ while not valid_connection:
         print('Waiting for Port Forwarding Connection')
         time.sleep(1)
 
-
 ### Checking for Active Jupyter Kernels
+if valid_connection:
+    kernel_api = f'http://localhost:{port}/api/kernels'
+    notebook_status = ast.literal_eval(requests.get(kernel_api).text)
+    running_notebook = any(x['execution_state'] == 'busy' for x in notebook_status)
+    os.killpg(os.getpgid(port_forward_job.pid), signal.SIGTERM)
 
-kernel_api = f'http://localhost:{port}/api/kernels'
-notebook_status = ast.literal_eval(requests.get(kernel_api).text)
-running_notebook = any(x['execution_state'] == 'busy' for x in notebook_status)
-os.killpg(os.getpgid(port_forward_job.pid), signal.SIGTERM)
-
-if running_notebook:
-    print("Active Jupyter Notebook Kernel Running")
-    print("Exiting Without Deleting Pod")
-    exit(4)
+    if running_notebook:
+        print("Active Jupyter Notebook Kernel Running")
+        print("Exiting Without Deleting Pod")
+        exit(4)
 
 
 ### Checking for Active Processes
