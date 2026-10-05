@@ -106,7 +106,7 @@ check_tmux = f"kubectl exec -i {pod_name} -- /bin/bash -c 'tmux ls'"
 tmux_sessions = sp.run(check_tmux, shell=True, capture_output=True
                           ).stdout.decode().strip().split('\n')
 
-tmux_sessions = [x for x in tmux_sessions if not x.startswith('jupyter_nbk')]
+tmux_sessions = [x for x in tmux_sessions if not x.startswith('jupyter_nbk') and x.strip()]
 if tmux_sessions:
     print("Tmux Session Found")
     print("Exiting Without Deleting Pod")
